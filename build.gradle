@@ -1,0 +1,56 @@
+buildscript {
+    ext {
+        kotlin_version = '1.2.21'
+        kotlin_coroutines_version = '0.22'
+        gson_version = '2.8.2'
+
+        main_class = 'zone.edison.server.Main'
+    }
+
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+    }
+}
+
+group 'Edison'
+version '0.0.1-SNAPSHOT'
+
+apply plugin: 'java'
+apply plugin: 'kotlin'
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
+    compile "org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlin_coroutines_version"
+    compile "com.google.code.gson:gson:$gson_version"
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+}
+
+kotlin {
+    experimental {
+        coroutines 'enable'
+    }
+}
+
+compileKotlin {
+    kotlinOptions.jvmTarget = "1.8"
+}
+compileTestKotlin {
+    kotlinOptions.jvmTarget = "1.8"
+}
+
+jar {
+    manifest {
+        attributes 'Main-Class': main_class
+    }
+
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+}
